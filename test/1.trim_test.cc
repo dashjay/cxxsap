@@ -3,6 +3,7 @@
 #include <iostream>
 
 int main() {
+    using namespace http::httputil;
     assert(trim_space("   aaa   ") == "aaa");
     assert(trim_crlf("aaa\r\n") == "aaa");
     assert(trim_right("aaa;;", ';') == "aaa");

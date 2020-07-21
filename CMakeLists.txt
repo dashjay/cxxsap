@@ -24,7 +24,7 @@ include_directories(.)
 aux_source_directory(. SOURCE_DIR)
 link_directories(archive/)
 
-set(static_lib_source_file http/http.cpp http/http.h)
+set(static_lib_source_file http/http.cc http/http.h)
 add_library(http_static STATIC ${static_lib_source_file})
 
 

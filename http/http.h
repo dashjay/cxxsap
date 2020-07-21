@@ -9,95 +9,149 @@
 #ifndef HTTP_H
 #define HTTP_H
 
-using MIME = std::map<std::string, std::vector<std::string>>;
 
-std::string trim_right(const std::string &input, const char cutset);
+namespace http {
+    using MIME = std::map<std::string, std::vector<std::string>>;
 
-std::string trim_left(const std::string &input, const char cutset);
+    class pesudo_mime;
+
+    class header;
+
+    class url_values;
+
+    class http_request;
+
+    namespace httputil {
+        void parse_first_line(http_request &r, std::string line);
+
+        enum METHODS {
+            /*
+         Method         = "OPTIONS"                ; Section 9.2
+                        | "GET"                    ; Section 9.3
+                        | "HEAD"                   ; Section 9.4
+                        | "POST"                   ; Section 9.5
+                        | "PUT"                    ; Section 9.6
+                        | "DELETE"                 ; Section 9.7
+                        | "TRACE"                  ; Section 9.8
+                        | "CONNECT"                ; Section 9.9
+            */
+            OPTIONS = 0,
+            GET,
+            HEAD,
+            POST,
+            PUT,
+            DELETE,
+            TRACE,
+            CONNECT,
+            MAX_METHODS
+        };
+
+        static std::map<std::string, METHODS> methods_str{
+                {"OPTIONS", METHODS::OPTIONS},
+                {"GET",     METHODS::GET},
+                {"HEAD",    METHODS::HEAD},
+                {"POST",    METHODS::POST},
+                {"PUT",     METHODS::PUT},
+                {"DELETE",  METHODS::DELETE},
+                {"TRACE",   METHODS::TRACE},
+                {"CONNECT", METHODS::CONNECT},
+        };
+
+        bool valid_method(std::string &method);
+
+        std::string trim_right(const std::string &input, char cutset);
+
+        std::string trim_left(const std::string &input, char cutset);
 
 // trim_space 去除字符串两端的空格
-std::string trim_space(const std::string &input);
+        std::string trim_space(const std::string &input);
 
-std::string trim_crlf(const std::string &input);
+        std::string trim_crlf(const std::string &input);
 
-class pseudo_mime {
-public:
-    MIME val;
+        std::vector<std::string> split(const std::string &input, char cutset);
+    }
 
-    std::string get(const char *key);
+    class pseudo_mime {
+    public:
+        MIME val;
 
-    void add(const char *key, const std::string &value);
+        std::string get(const char *key);
 
-    void set(const char *key, const std::string &value);
+        void add(const char *key, const std::string &value);
 
-    void del(const char *key);
+        void set(const char *key, const std::string &value);
 
-    std::vector<std::string> values(const char *key);
+        void del(const char *key);
 
-    MIME clone();
+        std::vector<std::string> values(const char *key);
 
-    virtual std::string to_string() = 0;
+        MIME clone();
 
-    friend std::ostream &operator<<(std::ostream &out, pseudo_mime &m);
+        virtual std::string to_string() = 0;
 
-    virtual int read(std::istream &input) = 0;
+        friend std::ostream &operator<<(std::ostream &out, pseudo_mime &m);
 
-    void clear();
-};
+        virtual void read(std::istream &input) = 0;
 
-class header : public pseudo_mime {
-public:
-    std::string to_string() override;
+        void clear();
+    };
 
-    int read(std::istream &input) override;
-};
+    class header : public pseudo_mime {
+    public:
+        std::string to_string() override;
 
-class url_values : public pseudo_mime {
-public:
-    std::string to_string() override;
+        void read(std::istream &input) override;
+    };
 
-    int read(std::istream &input) override;
-};
+    class url_values : public pseudo_mime {
+    public:
+        std::string to_string() override;
 
-class http_request {
-private:
-    std::string method;
-    std::string url;
+        void read(std::istream &input) override;
+    };
 
-    std::string proto;
-    int proto_major{};
-    int proto_minor{};
+    class http_request {
+    private:
+        std::string method;
+        std::string url;
 
-    header hdr;
+        std::string proto;
+        int proto_major{};
+        int proto_minor{};
 
-    std::string body;
+        header hdr;
 
-    int64_t content_length{};
+        std::string body;
 
-    bool close{};
+        int64_t content_length{};
 
-    std::string host;
+        bool close{};
 
-    url_values values;
+        std::string host;
 
-    std::string remote_addr;
-public:
-    http_request() = default;
+        url_values values;
 
-    int read(std::istream &in);
+        std::string remote_addr;
+    public:
+        http_request() = default;
 
-    std::string Method() { return method; }
+        int read(std::istream &in);
 
-    std::string Url() { return url; }
+        std::string &Method() { return method; }
 
-    std::string Proto() { return proto; }
+        std::string &Url() { return url; }
 
-    header &Headers() { return hdr; }
+        std::string &Proto() { return proto; }
 
-    int64_t ContentLength() { return content_length; }
+        header &Headers() { return hdr; }
 
-    std::string &Body() { return body; }
-};
+        int64_t &ContentLength() { return content_length; }
+
+        std::string &Body() { return body; }
+
+        std::string to_string();
+    };
+}
 
 
 #endif //HTTP_H
