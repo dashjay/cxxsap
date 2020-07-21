@@ -8,11 +8,26 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v2
-      
-    - name: test
-      run: sh test.sh
+      - uses: actions/checkout@v2
+
+      - name: install dep
+        run: |
+          sudo apt update
+          sudo apt install -y --no-install-recommends curl git cmake make
+
+      - name: install sockpp
+        run: |
+          git clone https://github.com/fpagliughi/sockpp.git
+          cd sockpp
+          mkdir build
+          cd build
+          cmake ..
+          make
+          sudo make install
+
+
+      - name: test
+        run: sh test.sh
+

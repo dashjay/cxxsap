@@ -106,11 +106,25 @@ std::vector<std::string> httputil::split(const std::string &input, char cutset) 
     auto pos{input.find(cutset)};
     int last = 0;
     while (pos != std::string::npos) {
-        res.push_back(trim_space(input.substr(last, pos)));
-        last = pos;
-        pos = input.find(cutset, last + 1);
+        res.push_back(trim_space(input.substr(last, pos - last)));
+        last = pos + 1;
+        pos = input.find(cutset, last);
     }
-    res.push_back(trim_space(input.substr(last + 1)));
+    res.push_back(trim_space(input.substr(last)));
+    return res;
+}
+
+std::vector<std::string> httputil::split(const std::string &input, const std::string &cutset) {
+    using namespace httputil;
+    std::vector<std::string> res;
+    auto pos{input.find(cutset)};
+    int last = 0;
+    while (pos != std::string::npos) {
+        res.push_back(trim_space(input.substr(last, pos - last)));
+        last = pos + cutset.length();
+        pos = input.find(cutset, last);
+    }
+    res.push_back(trim_space(input.substr(last)));
     return res;
 }
 
@@ -209,6 +223,23 @@ void url_values::read(std::istream &input) {
                 auto pair{split_pair(single)};
                 this->add(pair.first.c_str(), pair.second);
             }
+        }
+    }
+}
+
+void url_values::parse_url(std::string input) {
+    auto query{input.find('?')};
+    if (query != std::string::npos) {
+        input = input.substr(query + 1);
+    }
+    auto res = httputil::split(input, '&');
+    if (res.empty()) {
+        return;
+    }
+    for (auto &d: res) {
+        if (d.find('=') != std::string::npos) {
+            auto pair{split_pair(d)};
+            this->add(pair.first.c_str(), pair.second);
         }
     }
 }

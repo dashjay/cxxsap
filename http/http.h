@@ -69,6 +69,8 @@ namespace http {
         std::string trim_crlf(const std::string &input);
 
         std::vector<std::string> split(const std::string &input, char cutset);
+
+        std::vector<std::string> split(const std::string &input, const std::string &cutset);
     }
 
     class pseudo_mime {
@@ -108,6 +110,8 @@ namespace http {
         std::string to_string() override;
 
         void read(std::istream &input) override;
+
+        void parse_url(std::string input);
     };
 
     class http_request {
@@ -148,6 +152,8 @@ namespace http {
         int64_t &ContentLength() { return content_length; }
 
         std::string &Body() { return body; }
+
+        url_values &UrlValues() { return values; }
 
         std::string to_string();
     };

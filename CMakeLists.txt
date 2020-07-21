@@ -25,8 +25,7 @@ aux_source_directory(. SOURCE_DIR)
 link_directories(archive/)
 
 set(static_lib_source_file http/http.cc http/http.h)
-add_library(http_static STATIC ${static_lib_source_file})
-
+add_library(http_static SHARED ${static_lib_source_file})
 
 add_executable(trim_test test/1.trim_test.cc)
 target_link_libraries(trim_test http_static)
@@ -44,5 +43,10 @@ target_link_libraries(request_test http_static)
 add_test(request_test ./bin/request_test)
 set_tests_properties(request_test PROPERTIES PASS_REGULAR_EXPRESSION "pass")
 
-
+set(test4_name split_test)
+set(test4_src test/4.split_test.cc)
+add_executable(${test4_name} ${test4_src})
+target_link_libraries(${test4_name} http_static)
+add_test(${test4_name} ./bin/${test4_name})
+set_tests_properties(${test4_name} PROPERTIES PASS_REGULAR_EXPRESSION "pass")
 
