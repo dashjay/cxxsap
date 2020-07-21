@@ -7,7 +7,7 @@ set(project_name http_test)
 project(${project_name})
 
 set(CMAKE_CXX_COMPILER "c++")
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_FLAGS -g -Wall)
 string(REPLACE ";" " " CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
