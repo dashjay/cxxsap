@@ -1,5 +1,5 @@
 #include <iostream>
-#include <http/http.h>
+#include <http/httputils.h>
 #include <string>
 #include <cassert>
 
@@ -23,7 +23,7 @@ int main() {
     assert(res[2] == "ccc");
 
     a = "aaaaaa";
-    res = httputil::split(a, '&&');
+    res = httputil::split(a, "&&");
     assert(res[0] == "aaaaaa");
     std::cout << "split test passed!";
 }

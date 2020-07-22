@@ -31,3 +31,6 @@ jobs:
       - name: test
         run: sh test.sh
 
+      - name: test1
+        run: sh test1.sh
+

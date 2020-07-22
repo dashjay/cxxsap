@@ -1,4 +1,4 @@
-#include "http/http.h"
+#include "http/http_request.h"
 #include <iostream>
 #include <cassert>
 
@@ -32,5 +32,9 @@ int main() {
     av.parse_url(v.to_string());
     assert(av.get("a") == "b");
     assert(av.to_string() == "a=b&c=d&e=f&g=h&j=k");
+
+    url_values cd;
+    cd.parse_url("/");
+    assert(cd.val.empty());
     return 0;
 }

@@ -1,10 +1,12 @@
 #include <iostream>
-#include "http/http.h"
+#include "http/http_request.h"
 #include <thread>
 #include <sstream>
 #include "sockpp/tcp_acceptor.h"
 #include "sockpp/version.h"
 #include <cassert>
+
+using namespace http;
 
 void handler_request(sockpp::tcp_socket sock) {
     using namespace http;
@@ -16,13 +18,12 @@ void handler_request(sockpp::tcp_socket sock) {
     r.read(input);
 
     std::cout << "Connection closed from " << sock.peer_address() << std::endl;
-    if (r.Url() == "/") {
-        assert(r.Body() == "{\"fix\":\"b\"}");
-        assert(std::atoi(r.Headers().get("Content-Length").c_str()) == r.Body().length());
+    if (r.url == "/") {
+        assert(r.body == "{\"fix\":\"b\"}");
+        assert(std::atoi(r.headers.get("Content-Length").c_str()) == r.body.length());
         std::cout << "read request passed" << '\n';
     } else {
-        r.UrlValues().parse_url(r.Url());
-        assert(r.UrlValues().to_string() == "a=b&c=d");
+        assert(r.url_values().to_string() == "a=b&c=d");
         exit(0);
     }
 

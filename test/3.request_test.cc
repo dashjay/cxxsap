@@ -1,6 +1,7 @@
 #include <iostream>
-#include <http/http.h>
+#include <http/http_request.h>
 #include <sstream>
+#include <http/httputils.h>
 #include <cassert>
 
 
@@ -19,25 +20,25 @@ int main() {
             "\r\n"
             "{\"a\":\"b\"}");
 
-    if (r.read(input) != 0) {
+    if (!read_request(r, input)) {
         return -1;
     }
 
-    assert(r.Method() == "GET");
-    assert(httputil::valid_method(r.Method()));
-    assert(r.Url() == "/");
-    assert(r.Proto() == "HTTP/1.1");
 
-    auto hdr{r.Headers()};
-    assert(hdr.get("X-Forwarded-For") == "172.22.0.2");
-    assert(hdr.get("Accept-Encoding") == "identity");
-    assert(hdr.get("Unique-Id") == "5163e05a-1e8e-4d29-ad31-8ba6ef67fb92");
-    assert(hdr.get("User-Agent") == "Mozilla/5.0");
+    assert(r.method == "GET");
+    assert(httputil::valid_method(r.method));
+    assert(r.url == "/");
+    assert(r.proto == "HTTP/1.1");
 
-    assert(r.Body() == "{\"a\":\"b\"}");
+    assert(r.headers.get("X-Forwarded-For") == "172.22.0.2");
+    assert(r.headers.get("Accept-Encoding") == "identity");
+    assert(r.headers.get("Unique-Id") == "5163e05a-1e8e-4d29-ad31-8ba6ef67fb92");
+    assert(r.headers.get("User-Agent") == "Mozilla/5.0");
+
+    assert(r.body == "{\"a\":\"b\"}");
 
     std::cout << r.to_string() << '\n';
-    for (auto &v :hdr.values("Conn-Id")) {
+    for (auto &v :r.headers.values("Conn-Id")) {
         std::cout << v << '\n';
     }
     std::cout << "request test passed!" << '\n';

@@ -1,5 +1,6 @@
 #include <cassert>
-#include <http/http.h>
+#include <http/http_request.h>
+#include <http/httputils.h>
 #include <iostream>
 
 int main() {
