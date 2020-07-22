@@ -2,12 +2,13 @@
 // Created by 赵文杰 on 2020/7/22.
 //
 
+
+#ifndef HTTP_ERRORS_H
+#define HTTP_ERRORS_H
+
 #include <exception>
 #include <string>
 #include <iostream>
-
-#ifndef HTTP_TEST_ERRORS_H
-#define HTTP_TEST_ERRORS_H
 
 namespace errors {
 // http error class
@@ -31,4 +32,4 @@ namespace errors {
 }
 
 
-#endif //HTTP_TEST_ERRORS_H
+#endif // HTTP_ERRORS_H

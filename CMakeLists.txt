@@ -27,11 +27,12 @@ link_directories(archive/)
 link_directories(/usr/local/lib)
 
 set(static_lib_source_file
-        http/http_request.cc http/http_request.h
         http/header.cc http/header.h
         http/httputils.cc http/httputils.h
-        http/errors.cc http/errors.h
+        http/errors.h
+        http/http_request.cc http/http_request.h
         http/http_response.cc http/http_response.h
+        http/http_unit.h
         )
 
 add_library(http_static SHARED ${static_lib_source_file})

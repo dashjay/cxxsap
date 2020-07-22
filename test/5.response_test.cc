@@ -5,6 +5,7 @@
 #include <http/http_response.h>
 
 int main() {
+    using namespace http;
     std::string s = "HTTP/1.1 200 OK\r\n"
                     "server: ecstatic-3.3.2; ASP.NET\r\n"
                     "Content-Type: text/html\r\n"
@@ -17,8 +18,8 @@ int main() {
                     "\r\n"
                     "{\"a\":\"b\"}";
 
-    using namespace http;
-    http::http_response resp;
+
+    http_response resp;
     std::istringstream input;
     input.str(s);
     resp.read(input);
@@ -30,5 +31,6 @@ int main() {
     assert(resp.status_code == 200);
     assert(resp.content_length == std::atoi(resp.headers.get("Content-Length").c_str()));
     assert(resp.headers.values("server").size() == 2);
+    std::cout << resp;
     std::cout << "response test passed!";
 }

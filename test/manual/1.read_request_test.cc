@@ -23,7 +23,7 @@ void handler_request(sockpp::tcp_socket sock) {
         assert(std::atoi(r.headers.get("Content-Length").c_str()) == r.body.length());
         std::cout << "read request passed" << '\n';
     } else {
-        assert(r.url_values().to_string() == "a=b&c=d");
+        assert(r.Values().to_string() == "a=b&c=d");
         exit(0);
     }
 

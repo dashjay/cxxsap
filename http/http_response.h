@@ -2,16 +2,21 @@
 // Created by 赵文杰 on 2020/7/22.
 //
 
-#ifndef HTTP_TEST_HTTP_RESPONSE_H
-#define HTTP_TEST_HTTP_RESPONSE_H
+#ifndef HTTP_RESPONSE_H
+#define HTTP_RESPONSE_H
 
+#include <istream>
 #include <string>
-#include <http/header.h>
-#include <http/http_request.h>
+#include "errors.h"
+#include "header.h"
+#include "http_unit.h"
+#include "http_request.h"
+
 
 namespace http {
 
-    class http_response {
+
+    class http_response : public http_unit {
     public:
         std::string status; // "200 OK"
         int status_code; //200
@@ -24,11 +29,14 @@ namespace http {
         http_request *req;
 
         // 从输入流读取返回值
-        void read(std::istream &input);
+        void
+        read(std::istream &input) override;
 
-        std::string to_string();
+        std::string
+        to_string() override;
     };
+
+    bool read_response(http_response &resp, std::istream &input);
 }
 
-
-#endif //HTTP_TEST_HTTP_RESPONSE_H
+#endif // HTTP_RESPONSE_H

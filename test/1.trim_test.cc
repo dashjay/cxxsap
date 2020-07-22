@@ -1,10 +1,9 @@
 #include <cassert>
-#include <http/http_request.h>
 #include <http/httputils.h>
 #include <iostream>
 
 int main() {
-    using namespace http::httputil;
+    using namespace http::httputils;
     assert(trim_space("   aaa   ") == "aaa");
     assert(trim_crlf("aaa\r\n") == "aaa");
     assert(trim_right("aaa;;", ';') == "aaa");
